@@ -1,0 +1,73 @@
+syntax = "proto3";
+package com.drones.messages;
+
+message WelcomeMessage{
+  int32 id =1;
+  int32 port=2;
+  int32 posX = 3;
+  int32 posY = 4;
+}
+
+message AnswerWelcome{
+  bool isMaster = 1;
+  int32 batteryLevel = 2;
+  int32 posX = 3;
+  int32 posY = 4;
+  bool isElection=5;
+}
+
+message OrderMessage{
+  string order = 1;
+}
+
+message StatOrderMessage{
+  string statOrder = 1;
+  int32 id=2;
+}
+
+message ElectionMessage {
+  int32 battery= 1;
+  int32 id = 2;
+}
+
+message ElectedMessage {
+  int32 id = 1;
+}
+
+message Response{
+  string message= 1;
+}
+
+message AnswerElected{
+  int32 id=1;
+  int32 posX=2;
+  int32 posY =3;
+  int32 battery=4;
+  bool isDelivering = 5;
+  bool isRecharging = 6;
+  string stat = 7;
+}
+
+message ChargeRequest{
+  int32 id=1;
+  string message=2;
+}
+
+message IdMessage{
+  int32 id=1;
+}
+
+
+service DroneMessages{
+  rpc welcome(WelcomeMessage) returns (AnswerWelcome);
+  rpc assignDelivery(OrderMessage) returns (OrderMessage);
+  rpc giveStatDelivery(StatOrderMessage) returns (StatOrderMessage);
+  rpc sendElection(ElectionMessage) returns (Response);
+  rpc sendElected(ElectedMessage) returns (Response);
+  rpc sendInfoToNewMaster(AnswerElected) returns (Response);
+  rpc pingMaster(Response) returns (Response);
+  rpc chargeRequest(ChargeRequest) returns (Response);
+  rpc infoMasterRecharging(IdMessage) returns(Response);
+  rpc infoMasterEndedCharge(ChargeRequest) returns (Response);
+}
+
